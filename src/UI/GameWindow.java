@@ -9,7 +9,11 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
 
+import Components.Trigger;
 import Depends.CommonVariable;
+import Depends.SpecialEffect;
+import Depends.Vector;
+import Prefabs.Prefab;
 
 public class GameWindow extends JFrame{
 	private MapRender mapRender;
@@ -29,6 +33,10 @@ public class GameWindow extends JFrame{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new GameWindow();
+		Trigger t=new Trigger(new Prefab());
+		t.setEnable(true);
+		t.addAcceleration(new Vector(-30,-30));
+		//SpecialEffect.SmoothChanging(t.getRadius(), 100, 3000);
 	}
 	
 	private KeyListener keyController() {
@@ -50,7 +58,6 @@ public class GameWindow extends JFrame{
 					if(mapRender.CurrentCenterX<CommonVariable.MapWidth-CommonVariable.WindowWidth/2)
 						mapRender.CurrentCenterX+=CommonVariable.MapMovingSensitive;
 				}
-				System.out.println(mapRender.CurrentCenterX+" "+mapRender.CurrentCenterY);
 			}
 
 			@Override
