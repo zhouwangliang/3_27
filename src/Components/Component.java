@@ -21,8 +21,11 @@ public class Component {
 		
 	}
 	public void Destroy() {
+		
 		this.setEnable(false);
+		this.prefab=null;
 		components.remove(this);
+		
 	}
 	
 	

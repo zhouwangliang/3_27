@@ -20,20 +20,10 @@ public class Vector {
 	}
 	
 	public static Vector getReflectioinRay(Vector IncomingRay,Vector Normal) {
-		double magnitude=Math.sqrt(IncomingRay.x*IncomingRay.x+IncomingRay.y*IncomingRay.y);
-		double cos1=Normal.x/Math.sqrt(Normal.x*Normal.x+Normal.y*Normal.y);
-		double cos2=(Normal.x*IncomingRay.x+Normal.y*IncomingRay.y)/(Math.sqrt(Normal.x*Normal.x+Normal.y*Normal.y)*magnitude);
-		double sin1=Math.sqrt(1-cos1*cos1);
-		if(Normal.y<0)
-			sin1*=-1;
-		double sin2=Math.sqrt(1-cos2*cos2);
-		double sin3=(sin1*cos2+cos1*sin2)*-1;
-		double cos3=(cos1*cos2-sin1*sin2)*-1;
-		
-		//System.out.println("cos1,cos2,sin1,sin2 "+cos1+" "+cos2+" "+sin1+" "+sin2 );
-		//System.out.println(Math.acos(cos1)*180/3.14+" "+Math.acos(cos2)*180/3.14+" "+Math.asin(sin1)*180/3.14+" "+Math.asin(sin2)*180/3.14);
-		Vector result=new Vector(magnitude*cos3,magnitude*sin3);
-		return result;
+		double angle1=Vector.getAngle(IncomingRay);
+		double angle2=Vector.getAngle(Normal);
+		double reflectAngle=angle2-(angle1-Math.PI-angle2);
+		return new Vector(IncomingRay.getMagnitude()*Math.cos(reflectAngle),IncomingRay.getMagnitude()*Math.sin(reflectAngle));
 	}
 	
 	
@@ -41,11 +31,17 @@ public class Vector {
 	
 	
 	public static double getCosAngle(Vector vector1,Vector vector2) {
-		return (vector1.x*vector2.x+vector1.y*vector2.y)/Math.sqrt(vector1.x*vector1.x+vector1.y*vector1.y)/Math.sqrt(vector2.x*vector2.x+vector2.y*vector2.y);
+		return (vector1.x*vector2.x+vector1.y*vector2.y)/vector1.getMagnitude()/vector2.getMagnitude();
 	}
 	public static double getSinAngle(Vector vector1,Vector vector2) {
-		double cos=getCosAngle(vector1,vector2);
-		return Math.sqrt(1-cos*cos);
+		double angle1=Vector.getAngle(vector1);
+		double angle2=Vector.getAngle(vector2);
+		double cos=Vector.getCosAngle(vector1, vector2);
+		double sin=Math.sqrt(1-cos*cos);
+		if(Math.abs(angle1-angle2)>Math.PI) {
+			sin=-1*sin;
+		}
+		return sin;
 	}
 	public double getMagnitude() {
 		return Math.sqrt(x*x+y*y);
@@ -55,6 +51,15 @@ public class Vector {
 	}
 	public Vector getReversedUnitVector() {
 		return new Vector(x/this.getMagnitude()*-1,y/this.getMagnitude()*-1);
+	}
+	public static double getAngle(Vector vector) {
+		double cos=vector.x/vector.getMagnitude();
+		double sin=vector.y/vector.getMagnitude();
+		double angle=Math.acos(cos);
+		if(sin<0) {
+			angle=2*Math.PI-angle;
+		}
+		return angle;
 	}
 
 }
